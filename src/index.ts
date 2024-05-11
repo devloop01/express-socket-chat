@@ -7,8 +7,8 @@ const app = express();
 
 app.use(express.static(resolve(__dirname, "../public")));
 
-const httpServer = createServer(app);
-const io = new Server(httpServer);
+const server = createServer(app);
+const io = new Server(server);
 
 io.on("connection", (socket) => {
   const id = socket.id;
@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(3000, () => {
+server.listen(3000, () => {
   console.log("Server listening on port 3000");
 });
 
