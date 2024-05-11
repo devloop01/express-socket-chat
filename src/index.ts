@@ -30,8 +30,10 @@ import express from "express";
 
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.static("public"));
+app.get("/", (req, res) => {
+  res.send("Hello there! Api is working");
+});
 
-app.listen(PORT, "0.0.0.0", () => console.log(`Sever is running port ${PORT} ...`));
+app.listen(PORT, () => console.log(`Sever is running port ${PORT} ...`));
