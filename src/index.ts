@@ -3,11 +3,19 @@ import { createServer } from "http";
 import { resolve } from "path";
 import { Server } from "socket.io";
 
+const host = "0.0.0.0";
+const port = parseInt(process.env.PORT || "3000");
+
 const app = express();
 
 app.use(express.static(resolve(__dirname, "../public")));
 
-const server = createServer(app);
+const httpServer = createServer(app);
+
+const server = httpServer.listen(port, host, undefined, () => {
+  console.log("Server listening on port 3000");
+});
+
 const io = new Server(server);
 
 io.on("connection", (socket) => {
@@ -25,14 +33,7 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log("Server listening on port 3000");
-});
-
 // const app = express();
-
 // const port = process.env.PORT || 3000;
-
 // app.use(express.static(resolve(__dirname, "../public")));
-
 // app.listen(port, () => console.log(`Sever is running port ${port} ...`));
