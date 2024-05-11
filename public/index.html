@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello Express</title>
+    <script
+      src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+      integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <h1>Aloha Express!</h1>
+
+    <form id="form">
+      <input type="text" id="msg" name="message" />
+      <button id="btn" type="submit">Send Message</button>
+    </form>
+
+    <div id="messages"></div>
+
+    <script>
+      const messages = [];
+
+      const form = document.getElementById("form");
+      const messagesEl = document.getElementById("messages");
+
+      const socket = io();
+
+      socket.on("connect", () => {
+        console.log("Connected to server");
+
+        socket.on("message", (data) => {
+          messages.push(data);
+
+          showMessages();
+        });
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const message = formData.get("message");
+
+        socket.emit("message", message, (data) => {
+          messages.push(data);
+
+          showMessages();
+        });
+
+        form.reset();
+      });
+
+      function showMessages() {
+        messagesEl.innerHTML = "";
+        messages.forEach(({ id, message }) => {
+          const div = document.createElement("div");
+          div.innerHTML = `<strong>${id}</strong>: ${message}`;
+          messagesEl.appendChild(div);
+        });
+      }
+    </script>
+  </body>
+</html>
